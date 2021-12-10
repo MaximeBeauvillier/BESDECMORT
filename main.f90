@@ -14,7 +14,7 @@
 
 
 	
-	real*8 :: dx,dy
+	real*8 :: dx,dy,dt
 	real*8 :: zeta,time
 	real*8 ,dimension(1:nx) :: xx
 	real*8 ,dimension(1:ny) :: yy
