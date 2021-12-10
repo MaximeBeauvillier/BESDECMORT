@@ -42,7 +42,15 @@
 	enddo
 
 
-    
+     ! Initalisation 
+     call initialisation(u,v,nx,ny)
+     
+     ! Boucle temporelle
+     do k=1,nstep
+     	dt = pas_de_tps(u,v,nu,dx,dy,nx,ny)
+	time = time + dt
+	
+	
       
         
 
