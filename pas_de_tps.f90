@@ -2,7 +2,7 @@ function pas_de_tps(u,v,nu,dx,dy,nx,ny)
 	implicit none
 	
 	real*8 :: dt
-	real*8, dimension(nx+1,ny+1), intent(in) :: u,v
+	real*8, dimension(0:nx+1,0:ny+1), intent(in) :: u,v
 	real*8 , intent(in) :: nu, dx, dy
 	integer*8 , intent(in):: nx, ny
 	
