@@ -20,8 +20,8 @@
 	real*8 ,dimension(1:ny) :: yy
 	real*8 ,dimension(1:nx,1:ny):: rhs,pre,u_cent,v_cent,rot,div
 	!real*8, dimension(0:nx+1,0:ny+1) :: 
-	real*8 pi,sum,premoy,pamoy
-	integer i,j,k,itmax,isto,istep,nstep
+	real*8 pi,sum,premoy,pamoy, Re = 100
+	integer i,j,k,itmax,isto,istep,nstep=100
 	
     external ICCG2
 	
