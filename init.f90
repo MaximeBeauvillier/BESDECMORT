@@ -1,8 +1,8 @@
-subroutine parametre(tf,Re,schema,nx,ny,nz,epsi)
+subroutine parametre(tf,Re,schema,nx,ny,nz,epsi,dt_storage)
 	implicit none
 	
 	integer, intent(out) :: schema
-	real*8, intent(out) :: tf,Re, epsi
+	real*8, intent(out) :: tf,Re, epsi,dt_storage
 	integer, intent(out) :: nx,ny,nz
 	
 	open(10,file = 'param.txt')
@@ -12,6 +12,7 @@ subroutine parametre(tf,Re,schema,nx,ny,nz,epsi)
 	read(10,*) schema
 	read(10,*) Re
 	read(10,*) tf
+	read(10,*) dt_storage
 	read(10,*) epsi	
 	close(10)	
 

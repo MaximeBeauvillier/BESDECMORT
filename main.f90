@@ -13,7 +13,7 @@
 	integer,dimension(1:5):: ldiag
 
 	
-	real*8 :: dx,dy,dt, tf
+	real*8 :: dx,dy,dt,tf,dt_storage
 	real*8 :: zeta,time
 	real*8 ,allocatable :: xx(:)
 	real*8 ,allocatable :: yy(:)
@@ -25,10 +25,10 @@
 	integer i,j,k,l,itmax,isto,istep,nstep,schema
 	real*8 :: dkinetic, dnorme1u, dnorme2u, dnormeinfu
 	real*8 :: dnorme1v, dnorme2v, dnormeinfv, epsi
-
+	real*8 :: Co,Fo
 
 !	external ICCG2	
-	call parametre(tf,Re,schema,nx,ny,nz,epsi)	
+	call parametre(tf,Re,schema,nx,ny,nz,epsi,dt_storage)	
 
 	ndim = nx*ny
 	mdim = 3
@@ -78,113 +78,153 @@
 	dnormeinfv = 0.
 	
 	l = 0
- 	! Boucle temporelle
+	
+	
+ 	!********************************************************** 
+ 	! Debut de la boucle temporelle
+ 	!********************************************************** 
+ 	
+ 	
 	Do while (time < tf)
-	l = l +1
-     	call pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
-	time = time + dt
-	print*, time
-	if (nstep == 0) then
-		nstep = int(tf/dt)
-	end if
 	
-	call condition_limite(u,v,nx,ny) 
-
-!        Calcul du second membre des équations de u et v	
-	call calcul_rhs_u(u,dx,dy,nu,rhs_u,nx,ny)
-	call calcul_rhs_v(v,dx,dy,nu,rhs_v,nx,ny)
-	
-	
-	
-!        Prédiction de vitesse
-        call calcul_uetoile(nx,ny,u,v,dx,dy,uetoile,schema,rhs_u,dt)
-        call calcul_vetoile(nx,ny,u,v,dx,dy,vetoile,schema,rhs_v,dt)
- 
-!        Calcul du second membre de l'équation de pression
-
-	do j=1,ny
-		do i=1,nx
-			rhs(i,j)=1./dt*((uetoile(i,j)-uetoile(i-1,j))/dx &
-				       +(vetoile(i,j)-vetoile(i,j-1))/dy)
-	        enddo
-	enddo  
-	
-       
-
-!	GENERATION DE LA MATRICE des coef
-
-	call matgen_cavite(coef,jcoef,nx,ny,ndim,mdim,dx,dy) 
-	
-
-	sum=0.0
-	do j=1,ny
-	   do i=1,nx
-	      sum=sum+rhs(i,j)
-	   enddo
-	enddo
-
-        sum=sum/float(nx*ny)
-	k=1
-	do j=1,ny
-	   do i=1,nx
-	      rhs(i,j)=rhs(i,j)-sum
-	      rhs1(k) =-rhs(i,j)
-	      x1(k)=0.
-	      k=k+1
-	    enddo
-	enddo
-	
-!	RESOLUTION PRESSION
-
- 	call ICCG2(coef,jcoef,l_s,Ldiag,rhs1,x1, &
-      	       ndim,mdim,zeta,p_s,r_s,r2_s,q_s,s_s,itmax)
-    
-	k=1
-	do j=1,ny 
-	   do i=1,nx 
-  	      pre(i,j)=x1(k)
-	      k=k+1
-	    enddo
-	enddo
-	do j=1,ny
-	   write(10, '(8(2XE15.7))') (pre(i,j),i=1,nx)
-	enddo
-
-	
-!	correction de la vitesse
-	do j=1,ny 
-	   do i=1,nx-1 
-	   	u(i,j)=uetoile(i,j)-dt/dx*(pre(i+1,j)-pre(i,j))
-	   enddo
-	enddo 
+	!	Iteration courant
+		l = l +1
 		
-	do j=1,ny-1
-	   do i=1,nx 
-	   	v(i,j)=vetoile(i,j)-dt/dy*(pre(i,j+1)-pre(i,j))
-	   enddo
-	enddo
-	   
-  
-	   
+		
+	! 	Calcul du pas de temps adaptatif	
+	     	call pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
 	
-	u_cent=0.5*(u(0:nx-1,1:ny)+u(1:nx,1:ny))
-	v_cent=0.5*(v(1:nx,0:ny-1)+v(1:nx,1:ny))  
-	call calcul_rot(rot,u,v,nx,ny,dx,dy)
-	call calcul_div(div,u,v,nx,ny,dx,dy)
-    	istep=l
-	isto=5
+	!	Temps physique
+		time = time + dt
+		
+		
+	!	Estimation du nombre d'itération nécéssaire
+		if (nstep == 0) then
+			nstep = int(tf/dt)
+		end if
+		
+		
+	!	Ecriture des conditions à la limite explicite	
+		call condition_limite(u,v,nx,ny) 
+		
 
-  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)
+	!        Calcul du second membre des équations de u et v	
+		call calcul_rhs_u(u,dx,dy,nu,rhs_u,nx,ny)
+		call calcul_rhs_v(v,dx,dy,nu,rhs_v,nx,ny)
+		
+		
+		
+	!       Prédiction de vitesse
+		call calcul_uetoile(nx,ny,u,v,dx,dy,uetoile,schema,rhs_u,dt)
+		call calcul_vetoile(nx,ny,u,v,dx,dy,vetoile,schema,rhs_v,dt)
+	 
+	!        Calcul du second membre de l'équation de pression
+		do j=1,ny
+			do i=1,nx
+				rhs(i,j)=1./dt*((uetoile(i,j)-uetoile(i-1,j))/dx &
+					       +(vetoile(i,j)-vetoile(i,j-1))/dy)
+			enddo
+		enddo  
+		
+	       
 
-	call test_conv(u_cent, v_cent, nx,ny, dnormeinfu, dnormeinfv, dnorme2u, &
-	dnorme2v, dnorme1u, dnorme1v,dkinetic, time)
+	!	GENERATION DE LA MATRICE des coef
+		call matgen_cavite(coef,jcoef,nx,ny,ndim,mdim,dx,dy) 
+		
 
+		sum=0.0
+		do j=1,ny
+		   do i=1,nx
+		      sum=sum+rhs(i,j)
+		   enddo
+		enddo
+
+		sum=sum/float(nx*ny)
+		k=1
+		do j=1,ny
+		   do i=1,nx
+		      rhs(i,j)=rhs(i,j)-sum
+		      rhs1(k) =-rhs(i,j)
+		      x1(k)=0.
+		      k=k+1
+		    enddo
+		enddo
+		
+	!	RESOLUTION PRESSION
+	 	call ICCG2(coef,jcoef,l_s,Ldiag,rhs1,x1, &
+	      	       ndim,mdim,zeta,p_s,r_s,r2_s,q_s,s_s,itmax)
+	    
+		k=1
+		do j=1,ny 
+		   do i=1,nx 
+	  	      pre(i,j)=x1(k)
+		      k=k+1
+		    enddo
+		enddo
+		do j=1,ny
+		   write(10, '(8(2XE15.7))') (pre(i,j),i=1,nx)
+		enddo
 
 		
+	!	correction de la vitesse
+		do j=1,ny 
+		   do i=1,nx-1 
+		   	u(i,j)=uetoile(i,j)-dt/dx*(pre(i+1,j)-pre(i,j))
+		   enddo
+		enddo 
+			
+		do j=1,ny-1
+		   do i=1,nx 
+		   	v(i,j)=vetoile(i,j)-dt/dy*(pre(i,j+1)-pre(i,j))
+		   enddo
+		enddo
+		   
+	  
+		   
+	!	Obtention de u et v au centre des cellules principales	
+		u_cent=0.5*(u(0:nx-1,1:ny)+u(1:nx,1:ny))
+		v_cent=0.5*(v(1:nx,0:ny-1)+v(1:nx,1:ny)) 
+		
+		
+	!	Calcul du rotationnel et de la divergence	 
+		call calcul_rot(rot,u,v,nx,ny,dx,dy)
+		call calcul_div(div,u,v,nx,ny,dx,dy)
+		
+		
+	!	
+	    	istep=l
+		isto=int(tf/dt_storage)
+
+
+	!	Enregistrement des variables pour la visualisation
+	  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)
+
+
+	!       
+		call test_conv(u_cent, v_cent, nx,ny, dnormeinfu, dnormeinfv, dnorme2u, &
+		dnorme2v, dnorme1u, dnorme1v,dkinetic, time)
+		
+		
+		
+		
+		!********************************************************** 
+ 		! Information sur l'itération courante
+ 		!********************************************************** 
+ 		
+ 		print*,'***************************************************'
+ 		print*,'Iteration n°',l
+ 		print*,'Temps=',time
+ 		print*,'Pas de temps=',dt
+ 		print*,'Nombre de Courant :', maxval(abs(u))*dt/dx
+ 		print*,'Nombre de Fourier :', nu*dt/dx**2
+
+
+		
 	enddo
 
 
-
+	! ecriture de profiles de vitesse le long des lignes x=1/2 et y=1/2
+	call profiles(u,v,xx,yy,nx,ny,Re)
 	
 
 	deallocate(coef)
@@ -197,5 +237,8 @@
 	deallocate(rhs_u,rhs_v,rhs,u_cent,v_cent,rot,div,pre)
 	deallocate(u,v,uetoile,vetoile)
 
+ 	print*,'***************************************************'
+ 	print*,'Merci et bonne journée'
+ 	print*,'A très vite !'
 
 	end 
