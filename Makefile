@@ -1,9 +1,9 @@
 # Makefile 
 # Nom du compilateur
-FC = gfortran
+FC = gfortran  
 
 # Options de compilation: optimisation, debug etc...
-OPT = -fdefault-real-8  -C
+OPT = -ffpe-trap=invalid,zero,overflow -g
 # nom de l'executable
 EXE = cavite.exe
 # Options de l'edition de lien..
@@ -54,6 +54,7 @@ schema.o  : schema.f90
 
 calcul_rhs.o  : calcul_rhs.f90
 	$(FC) -c $(OPT) calcul_rhs.f90
+	
 
 	
 

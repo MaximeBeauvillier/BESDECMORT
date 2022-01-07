@@ -17,9 +17,10 @@ function upwindE(u , nx, ny, i, j)
 	integer*8, intent(in) :: i,j
 	real*8 :: moy
 	real*8 :: upwindE
+	real*8 :: one
+	one=1.
 
-	moy  = ((u(i+1,j) + u(i,j))/2)
-	upwindE = moy - sign(1.,moy)*(0.5 *(u(i+1,j) -u(i,j)))
+	upwindE = moy - sign(one,moy)*(0.5 *(u(i+1,j) -u(i,j)))
 
 end function upwindE
 
@@ -38,9 +39,11 @@ function upwindO(u , nx, ny, i, j)
 	integer*8, intent(in) :: i,j
 	real*8 :: moy
 	real*8 :: upwindO
+	real*8 :: one
+	one=1.
 
 	moy  = ((u(i,j) + u(i-1,j))/2)
-	upwindO = moy - sign(1.,moy)*(0.5 *(u(i,j) -u(i-1,j)))
+	upwindO = moy - sign(one,moy)*(0.5 *(u(i,j) -u(i-1,j)))
 
 end function upwindO
 
@@ -61,9 +64,11 @@ function upwindN(u,  nx, ny, i, j)
 	integer*8, intent(in) :: i,j
 	real*8 :: moy
 	real*8 :: upwindN
+	real*8 :: one
+	one=1.
 
 	moy  = ((u(i,j+1) + u(i,j))/2)
-	upwindN = moy - sign(1.,moy)*(0.5 *(u(i,j+1) -u(i,j)))
+	upwindN = moy - sign(one,moy)*(0.5 *(u(i,j+1) -u(i,j)))
 
 end function upwindN
 
@@ -84,9 +89,11 @@ function upwindS(u, nx, ny, i, j)
 	integer*8, intent(in) :: i,j
 	real*8 :: moy
 	real*8 :: upwindS
+	real*8 :: one
+	one=1.
 
 	moy  = ((u(i,j) + u(i,j-1))/2)
-	upwindS = moy - sign(1.,moy)*(0.5 *(u(i,j) -u(i,j-1)))
+	upwindS = moy - sign(one,moy)*(0.5 *(u(i,j) -u(i,j-1)))
 
 end function upwindS
  

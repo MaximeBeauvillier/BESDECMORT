@@ -1,13 +1,10 @@
-function pas_de_tps(u,v,nu,dx,dy,nx,ny)
+subroutine pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
 	implicit none
-	
-	real*8 :: dt
-	real*8, dimension(nx,ny), intent(in) :: u,v
+	integer , intent(in):: nx, ny
+	real*8, dimension(0:nx+1,0:ny+1), intent(in) :: u,v
 	real*8 , intent(in) :: nu, dx, dy
-	integer*8 , intent(in):: nx, ny
-	real*8 :: pas_de_tps
+	real*8, intent(out) :: dt
 	
-	pas_de_tps = maxval(abs(u))/dx + maxval(abs(v))/dy + 2*nu*(1/(dx*dx)+ 1/(dy*dy))
-	pas_de_tps = 1/(2*pas_de_tps)
+	dt = 0.5/(maxval(abs(u))/dx + maxval(abs(v))/dy + 2.*nu*(1./(dx*dx)+ 1./(dy*dy)))
 
-end function pas_de_tps
+end subroutine pas_de_tps
