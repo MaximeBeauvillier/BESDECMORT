@@ -28,6 +28,7 @@ function norme1(A,nx,ny)   ! Norme 1 d'une matrice A de dimension nx*ny
 			norme1=norme1+abs(A(i,j))
 		enddo
 	enddo
+	norme1 = norme1/(float(nx*ny))
 end function norme1
 
 
@@ -46,6 +47,7 @@ function norme2(A,nx,ny)   ! Norme 2 d'une matrice A de dimension nx*ny
 		enddo
 	enddo
 	norme2=sqrt(norme2)
+	norme2 = norme2/sqrt(float((nx*ny)))
 end function norme2
 
 
@@ -57,7 +59,7 @@ function normeinf(A,nx,ny)   ! Norme infinie d'une matrice A de dimension nx*ny
 	integer:: i,j
 	real*8,dimension(nx,ny),intent(in)::A
 	real*8::normeinf
-	normeinf=maxval(A)
+	normeinf=maxval(abs(A))
 end function normeinf 
 
 

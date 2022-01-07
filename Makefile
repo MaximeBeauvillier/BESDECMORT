@@ -22,7 +22,8 @@ OBJS =  \
        calcul_rhs.o \
        calcul_dif.o \
        steady_condition.o \
-       profile.o
+       profile.o \
+       test_convergence.o
 
 # Linking object files
 exe :   $(OBJS)
@@ -64,6 +65,9 @@ steady_condition.o  : steady_condition.f90
 profile.o  : profile.f90
 	$(FC) -c $(OPT) profile.f90	
 
+test_convergence.o  : test_convergence.f90
+	$(FC) -c $(OPT) test_convergence.f90
+
 	
 
 # Removing object files
@@ -71,6 +75,8 @@ clean :
 	/bin/rm -f $(OBJS) $(EXE)  *.mod
 	rm *.scl
 	rm *.vec
+	rm *.geo
+	rm *.cas?
 
 config :
 	if [ ! -d obj ] ; then mkdir obj ; fi

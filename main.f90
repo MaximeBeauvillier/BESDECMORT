@@ -23,9 +23,12 @@
 	real*8, allocatable :: u(:,:),v(:,:),uetoile(:,:),vetoile(:,:)
 	real*8 pi,sum,premoy,pamoy,Re,nu
 	integer i,j,k,l,itmax,isto,istep,nstep,schema
+	real*8 :: dkinetic, dnorme1u, dnorme2u, dnormeinfu
+	real*8 :: dnorme1v, dnorme2v, dnormeinfv, epsi
+
 
 !	external ICCG2	
-	call parametre(tf,Re,schema,nx,ny,nz)	
+	call parametre(tf,Re,schema,nx,ny,nz,epsi)	
 
 	ndim = nx*ny
 	mdim = 3
@@ -62,15 +65,25 @@
 	enddo
 	nstep = 0
 	
-     ! Initalisation 
-     call initialisation(u,v,nx,ny)
+   	! Initalisation 
+   	call initialisation(u,v,nx,ny)
 
+	! Initialisation des criteres de convergence
+	dkinetic = 0.
+	dnorme1u = 0.
+	dnorme2u = 0. 
+	dnormeinfu = 0.
+	dnorme1v = 0.
+	dnorme2v = 0. 
+	dnormeinfv = 0.
+	
 	l = 0
-     ! Boucle temporelle
+ 	! Boucle temporelle
 	Do while (time < tf)
 	l = l +1
      	call pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
 	time = time + dt
+	print*, time
 	if (nstep == 0) then
 		nstep = int(tf/dt)
 	end if
@@ -161,9 +174,18 @@
     	istep=l
 	isto=5
 
-  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)	
-	
+  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)
+
+	call test_conv(u_cent, v_cent, nx,ny, dnormeinfu, dnormeinfv, dnorme2u, &
+	dnorme2v, dnorme1u, dnorme1v,dkinetic)
+
+
+		
 	enddo
+
+
+
+	
 
 	deallocate(coef)
 	deallocate(rhs1, p_s, r_s, r2_s)
