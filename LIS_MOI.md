@@ -1,6 +1,7 @@
+Le projet consiste à simuler numériquement un écoulement incompressible dans une cavité avec une plaque mobile sur le dessus qui entraîne le fluide. Le fichier à éxécuter généré après la compilation est cavite.exe
 
 Pour lancer le code, les paramètres doivent être écrits dans param.txt
-Nx et Ny correspondent au nombre de sommets dans chacune des directions x et y, Re est le nombre de Reynolds et tf le temps final souhaité pour la simulation. Le schéma peut être choisi aussi avec 1:upwind et 2:centré
+Nx et Ny correspondent au nombre de sommets dans chacune des directions x et y, Re est le nombre de Reynolds et tf le temps final souhaité pour la simulation. Le schéma peut être choisi aussi avec 1 : upwind et 2 : centré
 
 La subroutine initialisation initialise le domaine avec une vitesse nulle hormis pour la plaque qui a une vitesse de 1 (adimensionnelle).
 Pour la résolution, le pas de temps adaptatif est calculé d'abord.
@@ -16,3 +17,6 @@ Le calcul de la pression à l'instant suivant se fait via les subroutines matgen
 A la suite de ce calcul de pression, la vitesse est corrigée afin d'assurer la condition d'incompressibilité.
 
 Pour l'affichage sous Paraview, on  calcule les vitesses u et v au centre des cellules. Par ailleurs les subroutines calcul_rot et calcul_div retournent le rotationnel et la divergence de la vitesse.
+Pour la génération des fichiers utiles pour la visualisation sous Paraview on utilise la subroutine write_result_ensight.
+
+Pour le post-traitement, on utilise le fichier steady_condition afin de déterminer selon plusieurs méthodes la durée avant d'atteindre le régime stationnaire. Le fichier profile donne accès aux profils de vitesse u ou v suivant une ligne horizontale ou verticale située au milieu du domaine. 
