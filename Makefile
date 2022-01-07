@@ -19,7 +19,6 @@ OBJS =  \
        init.o \
        pas_de_tps.o \
        calcul_etoile.o \
-       schema.o \
        calcul_rhs.o \
        calcul_dif.o \
        steady_condition.o
@@ -50,9 +49,6 @@ init.o : init.f90
 
 calcul_etoile.o : calcul_etoile.f90
 	$(FC) -c $(OPT) calcul_etoile.f90
-
-schema.o  : schema.f90
-	$(FC) -c $(OPT) schema.f90
 
 calcul_rhs.o  : calcul_rhs.f90
 	$(FC) -c $(OPT) calcul_rhs.f90
