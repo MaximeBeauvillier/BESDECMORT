@@ -1,1 +1,18 @@
 
+Pour lancer le code, les paramètres doivent être écrits dans param.txt
+Nx et Ny correspondent au nombre de sommets dans chacune des directions x et y, Re est le nombre de Reynolds et tf le temps final souhaité pour la simulation. Le schéma peut être choisi aussi avec 1:upwind et 2:centré
+
+La subroutine initialisation initialise le domaine avec une vitesse nulle hormis pour la plaque qui a une vitesse de 1 (adimensionnelle).
+Pour la résolution, le pas de temps adaptatif est calculé d'abord.
+
+La subroutine condition limite traduit la vitesse de la plaque mobile en haut ainsi que des vitesses nulles sur les autres parois.
+
+Les subroutines rhs_u et rhs_v calculent par schéma centré les seconds membres des équations de vitesse qui correspondent aux termes de diffusion.
+
+Les subroutines calcul_uetoile et calcul_vetoile donnent la prédiction de vitesse respectivement pour u et v par un schéma centré ou upwind selon le choix effectué au début.
+
+Le calcul de la pression à l'instant suivant se fait via les subroutines matgen_cavite (calcul de la matrice des coefficients) et ICCG2.
+
+A la suite de ce calcul de pression, la vitesse est corrigée afin d'assurer la condition d'incompressibilité.
+
+Pour l'affichage sous Paraview, on  calcule les vitesses u et v au centre des cellules. Par ailleurs les subroutines calcul_rot et calcul_div retournent le rotationnel et la divergence de la vitesse.
