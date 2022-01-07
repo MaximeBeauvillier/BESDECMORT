@@ -206,7 +206,7 @@ END SUBROUTINE write_result_ensight
 
       end  subroutine
 !
-!    ******************************************************************************
+!    ***********************************************************************************
 !   EnsightCase helps to write a Ensight's case file
 ! 
 !    VarName.....: Name of the variable
@@ -229,8 +229,8 @@ END SUBROUTINE write_result_ensight
 
       nfile=nstep/isto
 
-      write(*,*) 'nfile=', nfile,  ' isto=',isto,' istep=', istep
-	write(*,*) ' geoname', geoname
+      !write(*,*) 'nfile=', nfile,  ' isto=',isto,' istep=', istep
+	!write(*,*) ' geoname', geoname
       FileUnit = 40
       open(FileUnit,file=trim(GeoName)//'.case',status='replace')
 
