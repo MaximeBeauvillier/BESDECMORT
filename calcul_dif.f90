@@ -11,10 +11,10 @@ subroutine calcul_rot(rot,u,v,nx,ny,dx,dy)
 
 	do j=1,ny
 		do i=1,nx
-			diffv(i,j) = (0.5*(v(i+1,j) + v(i+1,j+1)) - &
- 			0.5*(v(i-1,j) + v(i-1,j+1)))/(2.*dx) 
-			diffu(i,j) = (0.5*(u(i+1,j+1) + u(i,j+1)) - &
-			0.5*(u(i+1,j-1) + u(i,j-1)))/(2.*dy)
+			diffv(i,j) = (0.5*(v(i+1,j) + v(i+1,j-1)) - &
+ 			0.5*(v(i-1,j) + v(i-1,j-1)))/(2.*dx) 
+			diffu(i,j) = (0.5*(u(i-1,j+1) + u(i,j+1)) - &
+			0.5*(u(i-1,j-1) + u(i,j-1)))/(2.*dy)
 			rot(i,j) = diffv(i,j) - diffu(i,j) 
 		end do
 	end do
