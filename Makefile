@@ -21,7 +21,8 @@ OBJS =  \
        calcul_etoile.o \
        schema.o \
        calcul_rhs.o \
-       calcul_dif.o
+       calcul_dif.o \
+       steady_condition.o
 
 # Linking object files
 exe :   $(OBJS)
@@ -58,6 +59,9 @@ calcul_rhs.o  : calcul_rhs.f90
 
 calcul_dif.o  : calcul_dif.f90
 	$(FC) -c $(OPT) calcul_dif.f90	
+	
+steady_condition.o  : steady_condition.f90
+	$(FC) -c $(OPT) steady_condition.f90	
 
 	
 
