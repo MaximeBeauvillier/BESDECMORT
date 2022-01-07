@@ -3,5 +3,5 @@
 1		!nz NE PAS TOUCHER
 1  		! schema (1 -> upwind, 2 -> centre)
 10. 		!Re
-30.		!tf
+3.		!tf
 1.e-4		!espi

@@ -177,7 +177,7 @@
   	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)
 
 	call test_conv(u_cent, v_cent, nx,ny, dnormeinfu, dnormeinfv, dnorme2u, &
-	dnorme2v, dnorme1u, dnorme1v,dkinetic)
+	dnorme2v, dnorme1u, dnorme1v,dkinetic, time)
 
 
 		
