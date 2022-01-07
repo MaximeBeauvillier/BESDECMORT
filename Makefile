@@ -3,7 +3,7 @@
 FC = gfortran  
 
 # Options de compilation: optimisation, debug etc...
-OPT = -ffpe-trap=invalid,zero,overflow -g
+OPT = -ffpe-trap=invalid,zero,overflow -g -fbounds-check
 # nom de l'executable
 EXE = cavite.exe
 # Options de l'edition de lien..
@@ -19,9 +19,9 @@ OBJS =  \
        init.o \
        pas_de_tps.o \
        calcul_etoile.o \
+       schema.o \
        calcul_rhs.o \
-       calcul_dif.o \
-       steady_condition.o
+       calcul_dif.o
 
 # Linking object files
 exe :   $(OBJS)
@@ -50,14 +50,14 @@ init.o : init.f90
 calcul_etoile.o : calcul_etoile.f90
 	$(FC) -c $(OPT) calcul_etoile.f90
 
+schema.o  : schema.f90
+	$(FC) -c $(OPT) schema.f90
+
 calcul_rhs.o  : calcul_rhs.f90
 	$(FC) -c $(OPT) calcul_rhs.f90
 
 calcul_dif.o  : calcul_dif.f90
 	$(FC) -c $(OPT) calcul_dif.f90	
-	
-steady_condition.o  : steady_condition.f90
-	$(FC) -c $(OPT) steady_condition.f90	
 
 	
 

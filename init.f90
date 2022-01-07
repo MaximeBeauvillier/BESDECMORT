@@ -1,16 +1,18 @@
-subroutine parametre(tf,Re,schema)
+subroutine parametre(tf,Re,schema,nx,ny,nz)
 	implicit none
 	
 	integer, intent(out) :: schema
 	real*8, intent(out) :: tf,Re
-
-	print*, "Choix du schema (1 -> upwind, 2 -> centre) : "
-	read*, schema
-	print*, "Choix de Re (attention reel) : "
-	read*, Re
-	print*, "Choix de tf (attention reel) : "
-	read*, tf
-
+	integer, intent(out) :: nx,ny,nz
+	
+	open(10,file = 'param.txt')
+	read(10,*) nx
+	read(10,*) ny
+	read(10,*) nz
+	read(10,*) schema
+	read(10,*) Re
+	read(10,*) tf	
+	close(10)	
 
 end subroutine parametre
 	

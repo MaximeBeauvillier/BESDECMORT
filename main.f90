@@ -1,36 +1,53 @@
 	program main
 	implicit none 
- 	integer, parameter ::nx = 16 ,ny=16 ,nz=1
+ 	integer ::nx ,ny ,nz
 !
 !       PARAMETRES ICCG
-        integer, parameter ::ndim=nx*ny,mdim=3	
-        real*8 ,dimension(1:ndim,1:mdim) :: coef 
+        integer ::ndim,mdim	
+        real*8,allocatable :: coef(:,:) 
 
-	real*8 ,dimension(1:ndim) :: rhs1,p_s,r_s,r2_s
-	real*8 ,dimension(1:ndim) :: q_s,s_s,x1
-	real*8 ,dimension(1:ndim,1:5)::l_s
-        integer, dimension(1:mdim):: jcoef
-	integer, dimension(1:5):: ldiag
+	real*8 ,allocatable :: rhs1(:),p_s(:),r_s(:),r2_s(:)
+	real*8 ,allocatable :: q_s(:),s_s(:),x1(:)
+	real*8 ,allocatable ::l_s(:,:)
+        integer,allocatable :: jcoef(:)
+	integer,dimension(1:5):: ldiag
 
 	
 	real*8 :: dx,dy,dt, tf
 	real*8 :: zeta,time
-	real*8 ,dimension(1:nx) :: xx
-	real*8 ,dimension(1:ny) :: yy
-	real*8 ,dimension(1:nx,1:ny):: rhs_u,rhs_v,rhs,u_cent,v_cent,rot,div,pre
-	real*8, dimension(0:nx+1,0:ny+1) :: u,v,uetoile,vetoile
+	real*8 ,allocatable :: xx(:)
+	real*8 ,allocatable :: yy(:)
+	real*8 ,allocatable :: rhs_u(:,:),rhs_v(:,:),rhs(:,:)
+	real*8 ,allocatable :: u_cent(:,:),v_cent(:,:),rot(:,:)
+	real*8 ,allocatable :: div(:,:),pre(:,:)
+	real*8, allocatable :: u(:,:),v(:,:),uetoile(:,:),vetoile(:,:)
 	real*8 pi,sum,premoy,pamoy,Re,nu
 	integer i,j,k,l,itmax,isto,istep,nstep,schema
 
+!	external ICCG2	
+	call parametre(tf,Re,schema,nx,ny,nz)	
 
-    external ICCG2
+	ndim = nx*ny
+	mdim = 3
+
+	allocate(coef(1:ndim,1:mdim))
+	allocate(rhs1(1:ndim), p_s(1:ndim), r_s(1:ndim), r2_s(1:ndim))
+	allocate(q_s(1:ndim),s_s(1:ndim),x1(1:ndim))
+	allocate(l_s(1:ndim,1:5))
+	allocate(jcoef(1:ndim))
+	allocate(xx(1:nx))
+	allocate(yy(1:ny))
+	allocate(rhs_u(1:nx,1:ny),rhs_v(1:nx,1:ny),rhs(1:nx,1:ny),u_cent(1:nx,1:ny))
+	allocate(v_cent(1:nx,1:ny),rot(1:nx,1:ny),div(1:nx,1:ny),pre(1:nx,1:ny))
+	allocate(u(0:nx+1,0:ny+1),v(0:nx+1,0:ny+1),uetoile(0:nx+1,0:ny+1),vetoile(0:nx+1,0:ny+1))
 	
-	pi=4.*atan(1.)
+
+    
+	
+	pi=4.*atan(1.)	
 	time=0.	
 	zeta=1.e-8
 	itmax=300
-
-	call parametre(tf,Re,schema)
 
 	nu=1./Re
 	dx=1./float(nx)
@@ -43,7 +60,7 @@
 	do j=1,ny
 	 yy(j)=(j-0.5)*dy
 	enddo
-	
+	nstep = 0
 	
      ! Initalisation 
      call initialisation(u,v,nx,ny)
@@ -54,6 +71,9 @@
 	l = l +1
      	call pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
 	time = time + dt
+	if (nstep == 0) then
+		nstep = int(tf/dt)
+	end if
 	
 	call condition_limite(u,v,nx,ny) 
 
@@ -141,9 +161,19 @@
     	istep=l
 	isto=5
 
-    call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)	
+  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)	
 	
 	enddo
+
+	deallocate(coef)
+	deallocate(rhs1, p_s, r_s, r2_s)
+	deallocate(q_s,s_s,x1)
+	deallocate(l_s)
+	deallocate(jcoef)
+	deallocate(xx)
+	deallocate(yy)
+	deallocate(rhs_u,rhs_v,rhs,u_cent,v_cent,rot,div,pre)
+	deallocate(u,v,uetoile,vetoile)
 
 
 	end 

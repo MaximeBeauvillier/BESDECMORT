@@ -16,7 +16,7 @@ SUBROUTINE write_result_ensight(xEnsight,yEnsight,u,v,omega,div,press,nx,ny,nz,i
    real*8,  dimension(ny) :: yEnsight
    real*8,  dimension(1 ) :: zEnsight
    integer :: i,j,imin,imax,jmin,jmax,kmin,kmax,istep_rep
-   integer :: nx,ny,nz,istep,isto,nstep
+   integer,intent(in) :: nx,ny,nz,istep,isto,nstep
    
    write(caseName,'(A)') 'sortieEnsight'
    write(varName(1),'(A)') 'vitesse'
@@ -38,6 +38,7 @@ SUBROUTINE write_result_ensight(xEnsight,yEnsight,u,v,omega,div,press,nx,ny,nz,i
    jmax = ny
    imin = 1
    imax = nx
+
 
 
 if(mod(istep,isto) == 0) then
@@ -228,6 +229,8 @@ END SUBROUTINE write_result_ensight
 
       nfile=nstep/isto
 
+      write(*,*) 'nfile=', nfile,  ' isto=',isto,' istep=', istep
+	write(*,*) ' geoname', geoname
       FileUnit = 40
       open(FileUnit,file=trim(GeoName)//'.case',status='replace')
 
