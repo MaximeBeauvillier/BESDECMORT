@@ -10,7 +10,7 @@ subroutine profiles(u,v,xx,yy,nx,ny,Re)
 	
 	
 	open(10,file='uprofile.dat')
-	imilieu=int(float(nx))/2.+1
+	imilieu=int(float(nx)/2).+1
 	
 	do j=1,ny
 		write(10,*)yy(j),u(imilieu,j)
@@ -18,7 +18,7 @@ subroutine profiles(u,v,xx,yy,nx,ny,Re)
 	close(10)
 	
 	open(20,file='vprofile.dat')
-	jmilieu=int(float(ny)/2.))+1
+	jmilieu=int(float(ny)/2.)+1
 	
 	do i=1,nx
 		write(20,*)xx(i),v(i,jmilieu)
