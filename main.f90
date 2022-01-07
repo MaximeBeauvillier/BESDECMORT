@@ -1,20 +1,19 @@
 	program main
 	implicit none 
- 	integer ,parameter ::nx=16,ny=16,nz=1
+ 	integer, parameter ::nx = 16 ,ny=16 ,nz=1
 !
 !       PARAMETRES ICCG
-!
-        integer ,parameter ::ndim=nx*ny,mdim=3
+        integer, parameter ::ndim=nx*ny,mdim=3	
         real*8 ,dimension(1:ndim,1:mdim) :: coef 
+
 	real*8 ,dimension(1:ndim) :: rhs1,p_s,r_s,r2_s
 	real*8 ,dimension(1:ndim) :: q_s,s_s,x1
 	real*8 ,dimension(1:ndim,1:5)::l_s
         integer, dimension(1:mdim):: jcoef
 	integer, dimension(1:5):: ldiag
 
-
 	
-	real*8 :: dx,dy,dt
+	real*8 :: dx,dy,dt, tf
 	real*8 :: zeta,time
 	real*8 ,dimension(1:nx) :: xx
 	real*8 ,dimension(1:ny) :: yy
@@ -22,17 +21,17 @@
 	real*8, dimension(0:nx+1,0:ny+1) :: u,v,uetoile,vetoile
 	real*8 pi,sum,premoy,pamoy,Re,nu
 	integer i,j,k,l,itmax,isto,istep,nstep,schema
-	
+
+
     external ICCG2
 	
 	pi=4.*atan(1.)
 	time=0.	
 	zeta=1.e-8
 	itmax=300
-	nstep=100
-	
-	schema=1
-	Re=1000.
+
+	call parametre(tf,Re,schema)
+
 	nu=1./Re
 	dx=1./float(nx)
 	dy=1./float(ny)	
@@ -44,13 +43,15 @@
 	do j=1,ny
 	 yy(j)=(j-0.5)*dy
 	enddo
-
-
+	
+	
      ! Initalisation 
      call initialisation(u,v,nx,ny)
-     
+
+	l = 0
      ! Boucle temporelle
-     do l=1,nstep
+	Do while (time < tf)
+	l = l +1
      	call pas_de_tps(u,v,nu,dx,dy,nx,ny,dt)
 	time = time + dt
 	
@@ -135,11 +136,10 @@
 	
 	u_cent=0.5*(u(0:nx-1,1:ny)+u(1:nx,1:ny))
 	v_cent=0.5*(v(1:nx,0:ny-1)+v(1:nx,1:ny))  
-	rot=0.
-	div=0.
-
+	call calcul_rot(rot,u,v,nx,ny,dx,dy)
+	call calcul_div(div,u,v,nx,ny,dx,dy)
     	istep=l
-	isto=2
+	isto=5
 
     call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)	
 	

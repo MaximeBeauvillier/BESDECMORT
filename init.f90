@@ -1,3 +1,23 @@
+subroutine parametre(tf,Re,schema)
+	implicit none
+	
+	integer, intent(out) :: schema
+	real*8, intent(out) :: tf,Re
+
+	print*, "Choix du schema (1 -> upwind, 2 -> centre) : "
+	read*, schema
+	print*, "Choix de Re (attention reel) : "
+	read*, Re
+	print*, "Choix de tf (attention reel) : "
+	read*, tf
+
+
+end subroutine parametre
+	
+	
+
+
+
 subroutine initialisation(u,v,nx,ny)
 	implicit none
 	

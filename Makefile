@@ -20,7 +20,8 @@ OBJS =  \
        pas_de_tps.o \
        calcul_etoile.o \
        schema.o \
-       calcul_rhs.o
+       calcul_rhs.o \
+       calcul_dif.o
 
 # Linking object files
 exe :   $(OBJS)
@@ -54,7 +55,9 @@ schema.o  : schema.f90
 
 calcul_rhs.o  : calcul_rhs.f90
 	$(FC) -c $(OPT) calcul_rhs.f90
-	
+
+calcul_dif.o  : calcul_dif.f90
+	$(FC) -c $(OPT) calcul_dif.f90	
 
 	
 
