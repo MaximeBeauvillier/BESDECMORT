@@ -10,7 +10,7 @@ function kinetic_energy(u_cent,v_cent,nx,ny)
 			kinetic_energy=kinetic_energy+0.5*(u_cent(i,j)**2+v_cent(i,j)**2)
 		enddo
 	enddo
-	
+	kinetic_energy = kinetic_energy/(float(nx*ny))
 end function kinetic_energy
 
 

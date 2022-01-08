@@ -3,7 +3,7 @@
 FC = gfortran  
 
 # Options de compilation: optimisation, debug etc...
-OPT = -ffpe-trap=invalid,zero,overflow -g
+OPT = -g
 # nom de l'executable
 EXE = cavite.exe
 # Options de l'edition de lien..

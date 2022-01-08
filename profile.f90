@@ -10,7 +10,7 @@ subroutine profiles(u,v,xx,yy,nx,ny,Re)
 	
 	
 	open(10,file='uprofile.dat')
-	imilieu=int(float(nx)/2).+1
+	imilieu=int(float(nx)/2.)+1
 	
 	do j=1,ny
 		write(10,*)yy(j),u(imilieu,j)

@@ -1,8 +1,8 @@
-16 		!nx
-16 		!ny
-1		!nz NE PAS TOUCHER
-1  		! schema (1 -> upwind, 2 -> centre)
-10. 		!Re
-1.		!tf
-0.1		! temps physique entre 2 enregistrements des variables pour la visualisation
-1.e-4		!espi
+32
+32
+1
+1
+10.0
+30.0
+10
+0.001
