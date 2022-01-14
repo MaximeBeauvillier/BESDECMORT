@@ -29,4 +29,6 @@ A la suite de ce calcul de pression, la vitesse est corrigée afin d'assurer la 
 
 Pour l'affichage sous Paraview, on calcule les vitesses u et v au centre des cellules. Par ailleurs les subroutines calcul_rot et calcul_div retournent le rotationnel et la divergence de la vitesse. Pour la génération des fichiers utiles pour la visualisation sous Paraview on utilise la subroutine write_result_ensight.
 
+## Post-traitement
+
 Pour le post-traitement, on utilise le fichier steady_condition.f90 qui présente plusieurs méthodes utilisées pour connaître la durée avant d'atteindre le régime stationnaire. Le fichier test_convergence.f90 est appelé à chaque itération pour calculer les valeurs pour chacune des méthodes. Le fichier profile.f90 donne accès aux profils de vitesse u ou v suivant une ligne horizontale ou verticale située au milieu du domaine.
