@@ -28,11 +28,13 @@
 	real*8 :: Co,Fo
 
 !	external ICCG2	
+!	Recuperation des donnees du fichier "param.txt"
 	call parametre(tf,Re,schema,nx,ny,nz,epsi,dt_storage)	
 
 	ndim = nx*ny
 	mdim = 3
 
+	!Allocation dynamique
 	allocate(coef(1:ndim,1:mdim))
 	allocate(rhs1(1:ndim), p_s(1:ndim), r_s(1:ndim), r2_s(1:ndim))
 	allocate(q_s(1:ndim),s_s(1:ndim),x1(1:ndim))
@@ -56,6 +58,8 @@
 	dx=1./float(nx)
 	dy=1./float(ny)	
 	
+	
+!	Creation des tableaux de coordonnees des centres 
 	do i=1,nx
 	 xx(i)=(i-0.5)*dx
 	enddo
@@ -67,15 +71,6 @@
 	
    	! Initalisation 
    	call initialisation(u,v,nx,ny)
-
-	! Initialisation des criteres de convergence
-	dkinetic = 0.
-	dnorme1u = 0.
-	dnorme2u = 0. 
-	dnormeinfu = 0.
-	dnorme1v = 0.
-	dnorme2v = 0. 
-	dnormeinfv = 0.
 	
 	l = 0
 	
@@ -200,7 +195,7 @@
 	  	call write_result_ensight(xx,yy,u_cent,v_cent,rot,div,pre,nx,ny,nz,istep,isto,nstep)
 
 
-	!       
+	!    	Enregistrement des criteres de convergence   
 		call test_conv(u_cent, v_cent, nx,ny, dnormeinfu, dnormeinfv, dnorme2u, &
 		dnorme2v, dnorme1u, dnorme1v,dkinetic, time)
 		
@@ -210,13 +205,14 @@
 		!********************************************************** 
  		! Information sur l'itération courante
  		!********************************************************** 
- 		
+ 		if (mod(l,100) == 0) then
  		print*,'***************************************************'
  		print*,'Iteration n°',l
  		print*,'Temps=',time
  		print*,'Pas de temps=',dt
  		print*,'Nombre de Courant :', maxval(abs(u))*dt/dx
  		print*,'Nombre de Fourier :', nu*dt/dx**2
+		endif
 
 
 		
