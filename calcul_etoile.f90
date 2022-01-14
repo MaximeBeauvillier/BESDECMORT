@@ -55,7 +55,7 @@ subroutine calcul_uetoile(nx,ny,u,v,dx,dy,uetoile,schema,rhs,dt)
 				uCE = UmoyE
 				uCO = UmoyO
 				uCN = 0.5*(u(i+1,j) + u(i,j))
-				uCS = 0.5*(v(i,j) + v(i-1,j))
+				uCS = 0.5*(u(i,j) + u(i-1,j))
 
 			uetoile(i,j) = u(i,j) + rhs(i,j)*dt - &
 			(dt/dx)*(UmoyE*uCE -UmoyO*uCO) - &
