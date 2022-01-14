@@ -53,7 +53,7 @@ SUBROUTINE ICCG2(coef,jcoef,L,Ldiag,b,x,n,m,eps,p,r,r2,q,s,itmax)
 			col=Ldiag(j)
 			if (col<i) L(i,1)=L(i,1)-L(i-col,j)*L(i-col,j)*s(i-col)
 		end do
-		s(i)=1./L(i,1) ! variable temporaire permettant d'éviter les divisions par L(i,1)
+		s(i)=1./L(i,1) ! variable temporaire permettant d'Ã©viter les divisions par L(i,1)
 
 		L(i,2)=coef(i,2)
 		do j=4,5
@@ -151,14 +151,14 @@ SUBROUTINE ICCG2(coef,jcoef,L,Ldiag,b,x,n,m,eps,p,r,r2,q,s,itmax)
 !    SCALING DE LA SOLUTION                         !
 !---------------------------------------------------!
 
-	do i=1,n; x(i)=x(i)*L(i,1); end do
-
-        if(j.ge.itmax) then
-	   print*, 'non convergence apres =', j,norm
-        else
-	   print*, ' Nombre Iterations ICCG2 ( Fill-In 2 ) =', j
-	endif
-	return
+!	do i=1,n; x(i)=x(i)*L(i,1); end do
+!
+!        if(j.ge.itmax) then
+!	   print*, 'non convergence apres =', j,norm
+!       else
+!	   print*, ' Nombre Iterations ICCG2 ( Fill-In 2 ) =', j
+!	endif
+!	return
 
 END SUBROUTINE ICCG2
 
