@@ -54,8 +54,8 @@ subroutine calcul_uetoile(nx,ny,u,v,dx,dy,uetoile,schema,rhs,dt)
 			if (schema == 2) then 
 				uCE = UmoyE
 				uCO = UmoyO
-				uCN = 0.5*(u(i,j+1) + u(i,j))
-				uCS = 0.5*(u(i,j) + u(i,j-1))
+				uCN = 0.5*(u(i+1,j) + u(i,j))
+				uCS = 0.5*(u(i,j) + u(i-1,j))
 
 			uetoile(i,j) = u(i,j) + rhs(i,j)*dt - &
 			(dt/dx)*(UmoyE*uCE -UmoyO*uCO) - &
@@ -106,8 +106,8 @@ subroutine calcul_vetoile(nx,ny,u,v,dx,dy,vetoile,schema,rhs,dt)
 			endif
 
 			if (schema == 2) then 
-				vCE = 0.5*(v(i,j) + v(i+1,j)) 
-				vCO = 0.5*(v(i-1,j) + v(i,j)) 
+				vCE = 0.5*(v(i,j) + v(i,j+1)) 
+				vCO = 0.5*(v(i,j-1) + v(i,j)) 
 				vCN = VmoyN
 				vCS = VmoyS
 
