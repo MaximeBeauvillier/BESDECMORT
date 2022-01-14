@@ -1,11 +1,18 @@
-#Projet Modélisation numérique des écoulements incompressible
+# Projet Modélisation numérique des écoulements incompressible
 ### Desmolin Basile, Trabichet Dorian, Beauvillier Maxime, Roland-Gaubert Matthieu
 ### INP ENSEEIHT
 
 
-##Objectif
-Le projet consiste à simuler numériquement un écoulement incompressible dans une cavité avec une plaque mobile sur le dessus qui entraîne le fluide. Le fichier à éxécuter généré après la compilation est cavite.exe
+## Objectif
+Le projet consiste à simuler numériquement un écoulement incompressible dans une cavité avec une plaque mobile sur le dessus qui entraîne le fluide.
 
+## Utilisation du code
+Il y a deux moyen d'utiliser ce code. 
+Le premier est de modifier le fichier param.txt, puis de compilier via la commande "make" et enfin executer le code via la commande "./cavite.exe.
+Le second est d'utiliser le script python afin de tester plusieurs configuration. La commande est alors "python3 script_python.py".
+
+
+## Description du code
 Pour lancer le code, les paramètres doivent être écrits dans param.txt Nx et Ny correspondent au nombre de cellules dans chacune des directions x et y, Re est le nombre de Reynolds et tf le temps final souhaité pour la simulation. Le schéma peut être choisi aussi avec 1 : upwind et 2 : centré. dt_storage correspond à l'intervalle de temps réel entre 2 enregistrements successifs.
 
 La subroutine initialisation initialise le domaine avec une vitesse nulle hormis pour la plaque qui a une vitesse de 1 (adimensionnelle). Pour la résolution, le pas de temps adaptatif est calculé d'abord.
